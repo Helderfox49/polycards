@@ -1,17 +1,8 @@
 import React, { useState } from 'react';
 import Home from './components/Home';
 import DeckManager from './components/DeckManager';
+import StudySession from './components/StudySession';
 
-// Zone de transition (un composant temporaire pour le mode étude en attendant l'Étudiant 3)
-function EmptyStudyPlaceholder({ deck, onBack }) {
-    return (
-        <div className="container">
-            <button onClick={onBack} style={{ backgroundColor: '#6c757d', marginBottom: '20px' }}>⬅ Retour</button>
-            <h2>🚀 Mode Révision pour "{deck.title}"</h2>
-            <p>Le moteur d'étude 3D est en cours de finalisation par l'Étudiant 3...</p>
-        </div>
-    );
-}
 
 function App() {
     const [currentDeck, setCurrentDeck] = useState(null);
@@ -35,7 +26,7 @@ function App() {
     }
 
     if (view === 'study') {
-        return <EmptyStudyPlaceholder deck={currentDeck} onBack={handleNavigateHome} />;
+        return <StudySession deck={currentDeck} onBack={handleNavigateHome} />;;
     }
 
     return <Home onSelectDeck={handleSelectDeck} />;
