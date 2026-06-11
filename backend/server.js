@@ -5,6 +5,7 @@ const connectDB = require('./config/db');
 
 // Importation des routes d'API
 const deckRoutes = require('./routes/deckRoutes');
+const cardRoutes = require('./routes/cardRoutes');
 
 // Charger les variables d'environnement
 dotenv.config();
@@ -20,6 +21,7 @@ app.use(express.json()); // Permet à Express de lire le format JSON envoyé par
 
 // Déclaration de la route de base pour l'API PolyCards
 app.use('/api/decks', deckRoutes);
+app.use('/api/decks', cardRoutes);
 
 // Route de test pour vérifier que le serveur tourne
 app.get('/', (req, res) => {
