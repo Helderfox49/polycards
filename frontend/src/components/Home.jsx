@@ -19,7 +19,7 @@ function Home({ onSelectDeck }) {
     }, []);
     return (
         <div className='container'>
-            <h1> Mes Paquets de Révision (Decks)</ 📚 h1>
+            <h1> 📚Mes Paquets de Révision (Decks)</ h1>
             {decks.length === 0 ? (
                 <p>Aucun paquet trouvé. Utilisez le script de peuplement (seed) ou l'interface pour en 
 ajouter.</p>
@@ -30,9 +30,9 @@ ajouter.</p>
                             <h3>{deck.title}</h3>
                             <p>{deck.description}</p>
                             <div style={{ display: 'flex', gap: '10px', marginTop: '15px' }}>
-                                <button onClick={() => onSelectDeck(deck, 'manage')}> Gérer les cartes</ ➕ button>
+                                <button onClick={() => onSelectDeck(deck, 'manage')}> ➕Gérer les cartes</ button>
                                 <button style={{ backgroundColor: '#28a745' }} onClick={() => onSelectDeck(deck, 
-'study')}> Réviser</ 🚀 button>
+'study')}> 🚀Réviser</ button>
                             </div>
                         </div>
                     ))}
