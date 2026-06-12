@@ -5,8 +5,8 @@ function DeckManager({ deck, onBack }) {
   const [cards, setCards] = useState([]);
 
   // États locaux pour contrôler les champs du formulaire réactif
-  const [question, setQuestion] = useState("");
-  const [answer, setAnswer] = useState("");
+  const [front, setFront] = useState("");
+  const [back, setBack] = useState("");
 
   // Fonction de récupération des cartes réelles associées à ce paquet
   const fetchCards = async () => {
@@ -33,23 +33,22 @@ function DeckManager({ deck, onBack }) {
     e.preventDefault();
 
     try {
-      const response = await fetch(
-        `http://localhost:5000/api/decks/${deck._id}/cards`,
+      const response = await fetch(`http://localhost:5000/api/decks/${deck._id}/cards`,
         {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
           },
           body: JSON.stringify({
-            question,
-            answer
+            front,
+            back
           })
         }
       );
 
       if (response.ok) {
-        setQuestion("");
-        setAnswer("");
+        setFront("");
+        setBack("");
 
         // Rechargement de la liste
         fetchCards();
@@ -89,8 +88,8 @@ function DeckManager({ deck, onBack }) {
 
           <input
             type="text"
-            value={question}
-            onChange={(e) => setQuestion(e.target.value)}
+            value={front}
+            onChange={(e) => setFront(e.target.value)}
             required
           />
         </div>
@@ -100,8 +99,8 @@ function DeckManager({ deck, onBack }) {
 
           <input
             type="text"
-            value={answer}
-            onChange={(e) => setAnswer(e.target.value)}
+            value={back}
+            onChange={(e) => setBack(e.target.value)}
             required
           />
         </div>
@@ -120,11 +119,11 @@ function DeckManager({ deck, onBack }) {
           <div key={card._id} className="deck-card">
 
             <p>
-              <strong>Q :</strong> {card.question}
+              <strong>Q :</strong> {card.front}
             </p>
 
             <p>
-              <strong>R :</strong> {card.answer}
+              <strong>R :</strong> {card.back}
             </p>
 
           </div>
