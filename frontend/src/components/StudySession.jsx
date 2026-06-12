@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { API_BASE_URL } from '../config';
 import Flashcard from './Flashcard';
 
 function StudySession({ deck, onBack }) {
@@ -10,7 +11,7 @@ function StudySession({ deck, onBack }) {
   useEffect(() => {
     const fetchCards = async () => {
       try {
-        const response = await fetch(`http://localhost:5000/api/decks/${deck._id}/cards`);
+        const response = await fetch(`http://l${API_BASE_URL}/api/decks/${deck._id}/cards`);
         const data = await response.json();
 
         setCards(data);

@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 
+import { API_BASE_URL } from '../config'; // Appel de l'url en fonction du contexte developpement oun en prod(deployé)
+
 function DeckManager({ deck, onBack }) {
 
   const [cards, setCards] = useState([]);
@@ -12,7 +14,7 @@ function DeckManager({ deck, onBack }) {
   const fetchCards = async () => {
     try {
       const res = await fetch(
-        `http://localhost:5000/api/decks/${deck._id}/cards`
+        `http://${API_BASE_URL}/api/decks/${deck._id}/cards`
       );
 
       const data = await res.json();
@@ -33,7 +35,7 @@ function DeckManager({ deck, onBack }) {
     e.preventDefault();
 
     try {
-      const response = await fetch(`http://localhost:5000/api/decks/${deck._id}/cards`,
+      const response = await fetch(`http://${API_BASE_URL}/api/decks/${deck._id}/cards`,
         {
           method: 'POST',
           headers: {

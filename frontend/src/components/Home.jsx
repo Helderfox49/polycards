@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { API_BASE_URL } from '../config';
 
 function Home({ onSelectDeck }) {
     const [decks, setDecks] = useState([]);
@@ -8,7 +9,7 @@ function Home({ onSelectDeck }) {
 
     const fetchDecks = async () => {
         try {
-            const response = await fetch('http://localhost:5000/api/decks');
+            const response = await fetch('http://${API_BASE_URL}/api/decks');
             const data = await response.json();
             setDecks(data); 
         } catch (error) {
@@ -26,7 +27,7 @@ function Home({ onSelectDeck }) {
         if (!title) return alert("Le titre du paquet est obligatoire !");
 
         try {
-            const response = await fetch('http://localhost:5000/api/decks', {
+            const response = await fetch('http://${API_BASE_URL}/api/decks', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ title, description })
