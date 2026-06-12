@@ -1,29 +1,37 @@
 import React, { useState } from 'react';
 import Home from './components/Home';
-import ManageDeck from './components/ManageDeck';
+import DeckManager from './components/DeckManager';
+import StudySession from './components/StudySession';
 
 function App() {
   const [currentDeck, setCurrentDeck] = useState(null);
-  const [view, setView] = useState('home'); // 'home' ou 'manage'
+  const [view, setView] = useState('home');
 
-  const handleSelectDeck = (deck, targetView) => {
-    setCurrentDeck(deck);
-    setView(targetView);
-  };
+  if (view === 'manage') {
+    return (
+      <DeckManager
+        deck={currentDeck}
+        onBack={() => setView('home')}
+      />
+    );
+  }
+
+  if (view === 'study') {
+    return (
+      <StudySession
+        deck={currentDeck}
+        onBack={() => setView('home')}
+      />
+    );
+  }
 
   return (
-    <div>
-      {view === 'home' && (
-        <Home onSelectDeck={handleSelectDeck} />
-      )}
-
-      {view === 'manage' && (
-        <ManageDeck
-          deck={currentDeck}
-          onBack={() => setView('home')}
-        />
-      )}
-    </div>
+    <Home
+      onSelectDeck={(deck, v) => {
+        setCurrentDeck(deck);
+        setView(v);
+      }}
+    />
   );
 }
 
