@@ -10,8 +10,8 @@ function Home({ onSelectDeck }) {
     const fetchDecks = async () => {
         try {
             const response = await fetch(`${API_BASE_URL}/api/decks`);
-            const data = await response.json();
-            setDecks(data); 
+            const res = await response.json();
+            setDecks(res.data); 
         } catch (error) {
             console.error("Erreur lors de la récupération des paquets :", error);
         }
@@ -33,10 +33,14 @@ function Home({ onSelectDeck }) {
                 body: JSON.stringify({ title, description })
             });
 
-            if (response.ok) {
-                setTitle(''); // Vide le champ titre
-                setDescription(''); // Vide le champ description
-                fetchDecks(); // Rafraîchit immédiatement la liste des paquets à l'écran
+            const res = await response.json();
+
+            if (res.success) {
+                setTitle("");
+                setDescription("");
+                fetchDecks();
+            } else {
+                alert(res.message || "Erreur création deck");
             }
         } catch (error) {
             console.error("Erreur lors de la création du paquet :", error);
@@ -62,7 +66,7 @@ function Home({ onSelectDeck }) {
             </form>
 
             {/* GRILLE D'AFFICHAGE */}
-            {decks.length === 0 ? (
+            {!Array.isArray(decks) || decks.length === 0 ? ( //Protection du render pour éviter le crash au cas ou on ne charge pas decks dans le tableau
                 <p>Aucun paquet disponible.</p>
             ) : (
                 <div className="deck-grid">
