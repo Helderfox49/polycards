@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-function ManageDeck({ deck, onBack }) {
+function DeckManager({ deck, onBack }) {
 
   const [cards, setCards] = useState([]);
 
@@ -136,4 +136,4 @@ function ManageDeck({ deck, onBack }) {
   );
 }
 
-export default ManageDeck;
+export default DeckManager;
