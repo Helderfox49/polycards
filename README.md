@@ -3,7 +3,7 @@
 
 ## 🎓 Cadre Académique
 
-Projet d'ingénierie logicielle réalisé dans le cadre du cours **IDE & Frameworks** (Année Académique 2025-2026) au Département de Génie Informatique de l'École Nationale Supérieure Polytechnique de Maroua (**ENSPM**, Université de Maroua).
+Projet d'ingénierie logicielle réalisé dans le cadre du cours **IDE & Frameworks** (Année Académique 2025-2026) au Département d'Informatique et des Télécommunications de l'École Nationale Supérieure Polytechnique de Maroua (**ENSPM**, Université de Maroua).
 
 ## 🎯 But de l'Application
 
