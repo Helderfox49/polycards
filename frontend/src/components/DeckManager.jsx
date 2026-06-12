@@ -14,7 +14,7 @@ function DeckManager({ deck, onBack }) {
   const fetchCards = async () => {
     try {
       const res = await fetch(
-        `http://${API_BASE_URL}/api/decks/${deck._id}/cards`
+        `${API_BASE_URL}/api/decks/${deck._id}/cards`
       );
 
       const data = await res.json();
@@ -35,7 +35,7 @@ function DeckManager({ deck, onBack }) {
     e.preventDefault();
 
     try {
-      const response = await fetch(`http://${API_BASE_URL}/api/decks/${deck._id}/cards`,
+      const response = await fetch(`${API_BASE_URL}/api/decks/${deck._id}/cards`,
         {
           method: 'POST',
           headers: {

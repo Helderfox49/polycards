@@ -11,7 +11,7 @@ function StudySession({ deck, onBack }) {
   useEffect(() => {
     const fetchCards = async () => {
       try {
-        const response = await fetch(`http://l${API_BASE_URL}/api/decks/${deck._id}/cards`);
+        const response = await fetch(`${API_BASE_URL}/api/decks/${deck._id}/cards`);
         const data = await response.json();
 
         setCards(data);
