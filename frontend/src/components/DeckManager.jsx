@@ -13,16 +13,24 @@ function DeckManager({ deck, onBack }) {
   // Fonction de récupération des cartes réelles associées à ce paquet
   const fetchCards = async () => {
     try {
-      const res = await fetch(
+      const response = await fetch(
         `${API_BASE_URL}/api/decks/${deck._id}/cards`
       );
 
-      const data = await res.json();
+      const res = await response.json();
 
-      setCards(data);
+      console.log("CARDS API", res);
+
+      if(res.success && Array.isArray(res.data)){
+        setCards(res.data);
+      } else {
+        setCards([]);
+        console.log(res.message);
+      }
 
     } catch (err) {
       console.error("Erreur API cards :", err);
+      setCards([]);
     }
   };
 
@@ -117,19 +125,16 @@ function DeckManager({ deck, onBack }) {
 
       <div className="deck-grid">
 
-        {cards.map(card => (
-          <div key={card._id} className="deck-card">
-
-            <p>
-              <strong>Q :</strong> {card.front}
-            </p>
-
-            <p>
-              <strong>R :</strong> {card.back}
-            </p>
-
-          </div>
-        ))}
+        {Array.isArray(cards) && cards.length > 0 ? (
+            cards.map(card => (
+                <div key={card._id} className="deck-card">
+                    <p><strong>Q :</strong> {card.front}</p>
+                    <p><strong>R :</strong> {card.back}</p>
+                </div>
+            ))
+        ) : (
+            <p>Aucune carte dans ce paquet.</p>
+        )};
 
       </div>
 
