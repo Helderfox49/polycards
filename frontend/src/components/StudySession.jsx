@@ -42,7 +42,7 @@ function StudySession({ deck, onBack }) {
     // Passer à la carte suivante (Règle d'ingénierie stricte)
     const handleNext = () => {
         if (currentIndex < cards.length - 1) {
-            setIsFlipped(false); // ⚠️ REGLE EXIGÉE : Réinitialiser impérativement le retournement à false
+            setIsFlipped(false); // REGLE EXIGÉE : Réinitialiser impérativement le retournement à false
             setCurrentIndex(currentIndex + 1); // Incrémentation de l'index
         }
     };
@@ -58,7 +58,7 @@ function StudySession({ deck, onBack }) {
     return (
         <div className="container" style={{ textAlign: 'center' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
-                <button onClick={onBack} style={{ backgroundColor: '#6c757d' }}>⬅️  Quitter le mode étude</button>
+                <button onClick={onBack} style={{ backgroundColor: '#6c757d' }}>⬅️  Retour </button>
                 <span><strong>Progression :</strong> {currentIndex + 1} / {cards.length}</span>
             </div>
 
@@ -89,7 +89,7 @@ function StudySession({ deck, onBack }) {
                     </button>
                 ) : (
                     <button onClick={onBack} style={{ backgroundColor: '#28a745' }}>
-                        🎉 Session terminée ! Retour
+                        Session terminée ! Retour
                     </button>
                 )}
             </div>

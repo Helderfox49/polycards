@@ -49,7 +49,7 @@ function Home({ onSelectDeck }) {
 
     return (
         <div className="container">
-            <h1>📚 Mes Paquets de Révision (Decks)</h1>
+            <h1> Mes Paquets de Révision (Decks)</h1>
             
             {/* BLOC FORMULAIRE D'AJOUT */}
             <form onSubmit={handleCreateDeck} style={{ background: '#fff', padding: '20px', borderRadius: '8px', marginBottom: '30px', boxShadow: '0 2px 4px rgba(0,0,0,0.05)' }}>
