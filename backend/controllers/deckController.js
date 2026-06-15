@@ -4,7 +4,7 @@ const Deck = require('../models/Deck');
 // @route GET /api/decks
 exports.getDecks = async (req, res) => {
     try {
-        const decks = await Deck.find(); // Récupère tous les paquets
+        const decks = await Deck.find().sort({ createdAt: -1 }); // Récupère tous les paquets
         res.status(200).json({
             success: true,
             data: decks

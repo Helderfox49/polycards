@@ -176,6 +176,13 @@ http://localhost:5173
 
 ```
 
+### 3. Déploiement en ligne
+L'application a été déployé en utilisant render.com pour le backend et vercel.com en ce qui concerne la partie front-end,
+et est disponible à ce lien [polycards](https://polycards-ebon.vercel.app/))
+```text
+https://polycards-ebon.vercel.app/
+```
+
 ----------
 
 ## ✅ Fonctionnalités Principales
