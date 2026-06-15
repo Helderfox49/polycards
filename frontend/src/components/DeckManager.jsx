@@ -1,26 +1,36 @@
 import React, { useState, useEffect } from 'react';
 
-function ManageDeck({ deck, onBack }) {
+import { API_BASE_URL } from '../config'; // Appel de l'url en fonction du contexte developpement oun en prod(deployé)
+
+function DeckManager({ deck, onBack }) {
 
   const [cards, setCards] = useState([]);
 
   // États locaux pour contrôler les champs du formulaire réactif
-  const [question, setQuestion] = useState("");
-  const [answer, setAnswer] = useState("");
+  const [front, setFront] = useState("");
+  const [back, setBack] = useState("");
 
   // Fonction de récupération des cartes réelles associées à ce paquet
   const fetchCards = async () => {
     try {
-      const res = await fetch(
-        `http://localhost:5000/api/decks/${deck._id}/cards`
+      const response = await fetch(
+        `${API_BASE_URL}/api/decks/${deck._id}/cards`
       );
 
-      const data = await res.json();
+      const res = await response.json();
 
-      setCards(data);
+      console.log("CARDS API", res);
+
+      if(res.success && Array.isArray(res.data)){
+        setCards(res.data);
+      } else {
+        setCards([]);
+        console.log(res.message);
+      }
 
     } catch (err) {
       console.error("Erreur API cards :", err);
+      setCards([]);
     }
   };
 
@@ -33,23 +43,22 @@ function ManageDeck({ deck, onBack }) {
     e.preventDefault();
 
     try {
-      const response = await fetch(
-        `http://localhost:5000/api/decks/${deck._id}/cards`,
+      const response = await fetch(`${API_BASE_URL}/api/decks/${deck._id}/cards`,
         {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
           },
           body: JSON.stringify({
-            question,
-            answer
+            front,
+            back
           })
         }
       );
 
       if (response.ok) {
-        setQuestion("");
-        setAnswer("");
+        setFront("");
+        setBack("");
 
         // Rechargement de la liste
         fetchCards();
@@ -89,8 +98,8 @@ function ManageDeck({ deck, onBack }) {
 
           <input
             type="text"
-            value={question}
-            onChange={(e) => setQuestion(e.target.value)}
+            value={front}
+            onChange={(e) => setFront(e.target.value)}
             required
           />
         </div>
@@ -100,8 +109,8 @@ function ManageDeck({ deck, onBack }) {
 
           <input
             type="text"
-            value={answer}
-            onChange={(e) => setAnswer(e.target.value)}
+            value={back}
+            onChange={(e) => setBack(e.target.value)}
             required
           />
         </div>
@@ -116,19 +125,16 @@ function ManageDeck({ deck, onBack }) {
 
       <div className="deck-grid">
 
-        {cards.map(card => (
-          <div key={card._id} className="deck-card">
-
-            <p>
-              <strong>Q :</strong> {card.question}
-            </p>
-
-            <p>
-              <strong>R :</strong> {card.answer}
-            </p>
-
-          </div>
-        ))}
+        {Array.isArray(cards) && cards.length > 0 ? (
+            cards.map(card => (
+                <div key={card._id} className="deck-card">
+                    <p><strong>Q :</strong> {card.front}</p>
+                    <p><strong>R :</strong> {card.back}</p>
+                </div>
+            ))
+        ) : (
+            <p>Aucune carte dans ce paquet.</p>
+        )};
 
       </div>
 
@@ -136,4 +142,4 @@ function ManageDeck({ deck, onBack }) {
   );
 }
 
-export default ManageDeck;
+export default DeckManager;

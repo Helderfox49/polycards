@@ -16,9 +16,14 @@ exports.getCardsByDeck = async (req, res) => {
         // Trouver toutes les cartes qui possèdent ce deckId
         const cards = await Card.find({ deckId: deckId });
         
-        res.status(200).json(cards);
+        res.status(200).json({
+            success: true,
+            data: cards
+        });
+
     } catch (error) {
         res.status(500).json({ 
+            success: false,
             message: "Erreur lors de la récupération des cartes",
             error: error.message 
         });
@@ -56,7 +61,10 @@ exports.addCardToDeck = async (req, res) => {
         });
 
         const savedCard = await newCard.save();
-        res.status(201).json(savedCard);
+        res.status(201).json({
+            success: true,
+            data: savedCard
+        });
     } catch (error) {
         res.status(500).json({ 
             message: "Erreur lors de l'ajout de la carte", 
