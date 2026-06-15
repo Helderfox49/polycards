@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { API_BASE_URL } from '../config';
-import Flashcard from './Flashcard';
+import Flashcard from './FlashCard';
 
 function StudySession({ deck, onBack }) {
   const [cards, setCards] = useState([]);
@@ -12,9 +12,9 @@ function StudySession({ deck, onBack }) {
     const fetchCards = async () => {
       try {
         const response = await fetch(`${API_BASE_URL}/api/decks/${deck._id}/cards`);
-        const data = await response.json();
+        const res = await response.json();
 
-        setCards(data);
+        setCards(res.data);
         setLoading(false);
       } catch (error) {
         console.error("Erreur récuperation cartes", error);
@@ -25,59 +25,76 @@ function StudySession({ deck, onBack }) {
     fetchCards();
   }, [deck._id]);
 
-  if (loading) {
-    return (
-      <div className="container">
-        <h3>Chargement...</h3>
-      </div>
-    );
-  }
-
-  if (cards.length === 0) {
-    return (
-      <div className="container" style={{ textAlign: 'center', padding: '40px' }}>
-        <h2>Aucune carte dans ce paquet !</h2>
-        <button onClick={onBack}>Retour</button>
-      </div>
-    );
-  }
-
-  const currentCard = cards[currentIndex];
-
-  const handleNext = () => {
-    if (currentIndex < cards.length - 1) {
-      setIsFlipped(false); // EXIGENCE MACHINE A ÉTAT ⚠️
-      setCurrentIndex(currentIndex + 1);
+  if (loading) return <div className="container"><h3>Chargement du mode révision...</h3></div>;
+    
+    // Si le paquet est vide
+    if (cards.length === 0) {
+        return (
+            <div className="container" style={{ textAlign: 'center', marginTop: '5px' }}>
+                <h2>Ce paquet ne contient pas encore de cartes.</h2>
+                <button onClick={onBack} style={{ backgroundColor: '#6c757d' }}>Retour à l'accueil</button>
+            </div>
+        );
     }
-  };
 
-  const handlePrevious = () => {
-    if (currentIndex > 0) {
-      setIsFlipped(false);
-      setCurrentIndex(currentIndex - 1);
-    }
-  };
+    const currentCard = cards[currentIndex];
 
-  return (
-    <div className="container" style={{ textAlign: 'center' }}>
-      {/* Interface de controle de session omitted for space constraints in builder */}
+    // Passer à la carte suivante (Règle d'ingénierie stricte)
+    const handleNext = () => {
+        if (currentIndex < cards.length - 1) {
+            setIsFlipped(false); // ⚠️ REGLE EXIGÉE : Réinitialiser impérativement le retournement à false
+            setCurrentIndex(currentIndex + 1); // Incrémentation de l'index
+        }
+    };
 
-      <Flashcard
-        front={currentCard.front}
-        back={currentCard.back}
-        isFlipped={isFlipped}
-        onFlip={() => setIsFlipped(!isFlipped)}
-      />
+    // Revenir à la carte précédente
+    const handlePrevious = () => {
+        if (currentIndex > 0) {
+            setIsFlipped(false); // Réinitialiser aussi ici pour éviter les bugs visuels
+            setCurrentIndex(currentIndex - 1);
+        }
+    };
 
-      <button onClick={handlePrevious} disabled={currentIndex === 0}>
-        Précédent
-      </button>
+    return (
+        <div className="container" style={{ textAlign: 'center' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
+                <button onClick={onBack} style={{ backgroundColor: '#6c757d' }}>⬅️  Quitter le mode étude</button>
+                <span><strong>Progression :</strong> {currentIndex + 1} / {cards.length}</span>
+            </div>
 
-      <button onClick={currentIndex < cards.length - 1 ? handleNext : onBack}>
-        {currentIndex < cards.length - 1 ? 'Suivant' : 'Fin !'}
-      </button>
-    </div>
-  );
+            <h2>Session d'étude : {deck.title}</h2>
+            <p style={{ color: '#666' }}>Mémorisez les notions à votre rythme.</p>
+
+            {/* Insertion du composant visuel Flashcard */}
+            <Flashcard 
+                front={currentCard.front} 
+                back={currentCard.back} 
+                isFlipped={isFlipped}
+                onFlip={() => setIsFlipped(!isFlipped)} 
+            />
+
+            {/* Boutons de contrôle de la machine à état */}
+            <div style={{ marginTop: '20px', display: 'flex', justifyContent: 'center', gap: '20px' }}>
+                <button 
+                    onClick={handlePrevious} 
+                    disabled={currentIndex === 0}
+                    style={{ backgroundColor: currentIndex === 0 ? '#cccccc' : '#007bff', cursor: currentIndex === 0 ? 'not-allowed' : 'pointer' }}
+                >
+                    ◀ Précédent
+                </button>
+
+                {currentIndex < cards.length - 1 ? (
+                    <button onClick={handleNext} style={{ backgroundColor: '#007bff' }}>
+                        Suivant ▶
+                    </button>
+                ) : (
+                    <button onClick={onBack} style={{ backgroundColor: '#28a745' }}>
+                        🎉 Session terminée ! Retour
+                    </button>
+                )}
+            </div>
+        </div>
+    );
 }
 
 export default StudySession;
