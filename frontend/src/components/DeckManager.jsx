@@ -82,7 +82,7 @@ function DeckManager({ deck, onBack }) {
         ⬅️ Retour
       </button>
 
-      <h2>⚙️ Gestion : {deck.title}</h2>
+      <h2>Gestion : {deck.title}</h2>
 
       {/* Formulaire contrôlé réactif */}
       <form
@@ -91,7 +91,7 @@ function DeckManager({ deck, onBack }) {
         style={{ marginBottom: '30px' }}
       >
 
-        <h3>➕ Ajouter une nouvelle carte</h3>
+        <h3>Ajouter une nouvelle carte</h3>
 
         <div className="form-group">
           <label>Question (Recto) :</label>
@@ -100,6 +100,7 @@ function DeckManager({ deck, onBack }) {
             type="text"
             value={front}
             onChange={(e) => setFront(e.target.value)}
+            placeholder="C'est quoi un objet en POO ?"
             required
           />
         </div>
@@ -107,11 +108,11 @@ function DeckManager({ deck, onBack }) {
         <div className="form-group">
           <label>Réponse (Verso) :</label>
 
-          <input
-            type="text"
-            value={back}
-            onChange={(e) => setBack(e.target.value)}
-            required
+          <textarea 
+              value={back} 
+              onChange={(e) => setBack(e.target.value)} 
+              placeholder="Ex: C'est une instance concrète d'une classe" 
+              rows={4}
           />
         </div>
 
@@ -134,7 +135,7 @@ function DeckManager({ deck, onBack }) {
             ))
         ) : (
             <p>Aucune carte dans ce paquet.</p>
-        )};
+        )}
 
       </div>
 

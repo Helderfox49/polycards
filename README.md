@@ -31,26 +31,36 @@ L'application repose sur une architecture découplée de type **MERN** (sans Nod
 ## 📁 Arborescence du Projet
 
 ```text
+## 📁 Arborescence du Projet et Rôle des Répertoires
+
+```text
 polycards/
-├── backend/                  # Partie Serveur (API REST)
-│   ├── config/
-│   │   └── db.js             # Connexion asynchrone à MongoDB Atlas
-│   ├── controllers/          # Logique métier
-│   │   ├── cardController.js
-│   │   └── deckController.js
-│   ├── models/               # Schémas Mongoose
-│   │   ├── Card.js
-│   │   └── Deck.js
-│   ├── routes/
-│   │   └── deckRoutes.js     # Routes API
-│   ├── seed.js               # Peuplement automatique de la BDD
-│   └── server.js             # Point d'entrée Express
+├── backend/                  # --- PARTIE SERVEUR & API ---
+│   ├── config/               # Configuration des modules externes
+│   │   └── db.js             # Script de connexion asynchrone à MongoDB Atlas
+│   ├── controllers/          # Logique métier et manipulation des modèles
+│   │   ├── cardController.js # Gestion des requêtes des cartes (GET, POST)
+│   │   └── deckController.js # Gestion des requêtes des paquets (GET, POST)
+│   ├── models/               # Schémas de données (Modèles Mongoose)
+│   │   ├── Card.js           # Structure d'un document "Carte"
+│   │   └── Deck.js           # Structure d'un document "Paquet"
+│   ├── routes/               # Mappage des URL RESTful
+│   │   └── deckRoutes.js     # Routes d'aiguillage pour /api/decks
+│   ├── .env                  # Variables d'environnement secrètes (PORT, URI Atlas)
+│   ├── seed.js               # Script d'automatisation du peuplement de test (Seeding)
+│   └── server.js             # Point d'entrée principal de l'API Express
 │
-└── frontend/                 # Partie Client (React)
+└── frontend/                 # --- PARTIE CLIENT INTERFACE ---
     ├── src/
-    │   ├── components/       # Composants de l'application
-    │   ├── App.jsx           # Gestion de la navigation
-    │   └── index.css         # Styles globaux et animations 3D
+    │   ├── components/       # Composants modulaires React
+    │   │   ├── Home.jsx      # Page d'accueil (Grille des Decks & Formulaire)
+    │   │   ├── DeckManager.jsx # Panneau d'administration et d'ajout de cartes
+    │   │   ├── StudySession.jsx# Moteur algorithmique et machine à état du mode révision
+    │   │   └── Flashcard.jsx # Composant graphique muet doté de la rotation 3D
+    │   ├── App.jsx           # Orchestrateur central et navigation par état de l'application
+    │   ├── index.css         # Styles globaux et animations de transition 3D en CSS pur
+    │   └── main.jsx          # Point d'ancrage de React dans le DOM HTML
+    └── vite.config.js        # Configuration de l'outillage Vite
 
 ```
 

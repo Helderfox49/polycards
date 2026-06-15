@@ -32,7 +32,11 @@ function StudySession({ deck, onBack }) {
         return (
             <div className="container" style={{ textAlign: 'center', marginTop: '5px' }}>
                 <h2>Ce paquet ne contient pas encore de cartes.</h2>
-                <button onClick={onBack} style={{ backgroundColor: '#6c757d' }}>Retour à l'accueil</button>
+                <button 
+                    onClick={onBack} 
+                    style={{ backgroundColor: '#6c757d' }}>
+                        Retour à l'accueil
+                </button>
             </div>
         );
     }
@@ -63,7 +67,7 @@ function StudySession({ deck, onBack }) {
             </div>
 
             <h2>Session d'étude : {deck.title}</h2>
-            <p style={{ color: '#666' }}>Mémorisez les notions à votre rythme.</p>
+            <p style={{ color: '#664' }}>Mémorisez les notions à votre rythme.</p>
 
             {/* Insertion du composant visuel Flashcard */}
             <Flashcard 

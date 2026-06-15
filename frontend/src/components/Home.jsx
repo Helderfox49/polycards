@@ -51,16 +51,21 @@ function Home({ onSelectDeck }) {
         <div className="container">
             <h1> Mes Paquets de Révision (Decks)</h1>
             
-            {/* BLOC FORMULAIRE D'AJOUT */}
+            {/* BLOC FORMULAIRE D'AJOUT D'UN NOUVEAU PAQUET*/}
             <form onSubmit={handleCreateDeck} style={{ background: '#fff', padding: '20px', borderRadius: '8px', marginBottom: '30px', boxShadow: '0 2px 4px rgba(0,0,0,0.05)' }}>
                 <h3>Créer un nouveau paquet de cartes</h3>
                 <div className="form-group">
                     <label>Titre du paquet :</label>
-                    <input type="text" value={title} onChange={(e) => setTitle(e.target.value)} placeholder="Ex: Syntaxe Kotlin" />
+                    <input type="text" value={title} onChange={(e) => setTitle(e.target.value)} placeholder="Ex: Django" />
                 </div>
                 <div className="form-group">
                     <label>Description :</label>
-                    <textarea value={description} onChange={(e) => setDescription(e.target.value)} placeholder="Ex: Formules fondamentales pour l'examen" />
+                    <textarea 
+                        value={description} 
+                        onChange={(e) => setDescription(e.target.value)} 
+                        placeholder="Ex: Débuter la programmation web avec Python" 
+                        rows={4}
+                    />
                 </div>
                 <button type="submit">Créer le paquet</button>
             </form>
@@ -75,8 +80,8 @@ function Home({ onSelectDeck }) {
                             <h3>{deck.title}</h3>
                             <p>{deck.description}</p>
                             <div style={{ display: 'flex', gap: '10px', marginTop: '15px' }}>
-                                <button onClick={() => onSelectDeck(deck, 'manage')}>➕ Gérer les cartes</button>
-                                <button style={{ backgroundColor: '#28a745' }} onClick={() => onSelectDeck(deck, 'study')}>🚀 Réviser</button>
+                                <button onClick={() => onSelectDeck(deck, 'manage')}>Gérer les cartes</button>
+                                <button style={{ backgroundColor: '#28a745' }} onClick={() => onSelectDeck(deck, 'study')}>Réviser</button>
                             </div>
                         </div>
                     ))}
