@@ -8,7 +8,7 @@ import {
 
 import Home from './components/Home';
 import Dashboard from './components/Dashboard';
-import DeckDetails from './components/DeckDetails';
+import DeckDetails from './components/DeckManager';
 import StudySession from './components/StudySession';
 import Navbar from './components/Navbar';
 

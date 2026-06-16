@@ -5,7 +5,12 @@ import { useAuth } from '@clerk/clerk-react';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
 import { Textarea } from './ui/textarea';
-import { FolderPlus } from 'lucide-react';
+import {
+    FolderPlus,
+    Pencil,
+    Check,
+    X
+} from 'lucide-react';
 
 export default function Dashboard() {
     const navigate = useNavigate();
@@ -17,6 +22,11 @@ export default function Dashboard() {
     const [description, setDescription] = useState('');
 
     const [loadingId, setLoadingId] = useState(null);
+
+    //Formualire de modification d'un deck
+    const [editingDeckId, setEditingDeckId] = useState(null);
+    const [editTitle, setEditTitle] = useState('');
+    const [editDescription, setEditDescription] = useState('');
 
     // Récupération des decks
     const fetchDecks = async () => {
@@ -64,6 +74,50 @@ export default function Dashboard() {
             }
         } catch (error) {
             console.error("Erreur création deck :", error);
+        }
+    };
+
+    // Mise à jour d'un deck
+    const handleUpdateDeck = async (deckId) => {
+        try {
+            const token = await getToken();
+
+            const response = await fetch(
+                `${import.meta.env.VITE_API_URL}/api/decks/${deckId}`,
+                {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        Authorization: `Bearer ${token}`
+                    },
+                    body: JSON.stringify({
+                        title: editTitle,
+                        description: editDescription
+                    })
+                }
+            );
+
+            const result = await response.json();
+
+            if (result.success) {
+                setDecks(prev =>
+                    prev.map(deck =>
+                        deck._id === deckId
+                            ? {
+                                ...deck,
+                                title: editTitle,
+                                description: editDescription
+                            }
+                            : deck
+                    )
+                );
+
+                setEditingDeckId(null);
+                setEditTitle('');
+                setEditDescription('');
+            }
+        } catch (error) {
+            console.error("Erreur modification deck :", error);
         }
     };
 
@@ -137,11 +191,75 @@ export default function Dashboard() {
             {Array.isArray(decks) && decks.length > 0 ? (
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                     {decks.map((deck) => (
-                        <div key={deck._id} className="p-5 border rounded-xl shadow-sm bg-white flex flex-col justify-between">
-                            <div>
-                                <h3 className="text-xl font-semibold text-slate-800">{deck.title}</h3>
-                                <p className="text-slate-600 mt-2 text-sm line-clamp-2">{deck.description || "Aucune description."}</p>
-                            </div>
+                        <div key={deck._id} className="relative p-5 border rounded-xl shadow-sm bg-white flex flex-col justify-between">
+                            <>
+                                <div className="absolute top-3 right-3">
+                                    {editingDeckId !== deck._id && (
+                                        <button
+                                            onClick={() => {
+                                                setEditingDeckId(deck._id);
+                                                setEditTitle(deck.title);
+                                                setEditDescription(deck.description || '');
+                                            }}
+                                            className="p-2 text-indigo-600 hover:bg-indigo-50 rounded-lg transition-colors"
+                                            title="Modifier ce paquet"
+                                        >
+                                            <Pencil className="w-4 h-4" />
+                                        </button>
+                                    )}
+                                </div>
+
+                                {editingDeckId === deck._id ? (
+                                    <div className="flex flex-col gap-3">
+                                        <Input
+                                            value={editTitle}
+                                            onChange={(e) => setEditTitle(e.target.value)}
+                                            placeholder="Nom du paquet"
+                                        />
+
+                                        <Textarea
+                                            value={editDescription}
+                                            onChange={(e) => setEditDescription(e.target.value)}
+                                            rows={3}
+                                            placeholder="Description"
+                                        />
+
+                                        <div className="flex justify-end gap-2">
+                                            <Button
+                                                variant="ghost"
+                                                size="sm"
+                                                onClick={() => {
+                                                    setEditingDeckId(null);
+                                                    setEditTitle('');
+                                                    setEditDescription('');
+                                                }}
+                                            >
+                                                <X className="w-4 h-4 mr-1" />
+                                                Annuler
+                                            </Button>
+
+                                            <Button
+                                                size="sm"
+                                                onClick={() => handleUpdateDeck(deck._id)}
+                                                className="bg-emerald-600 hover:bg-emerald-700"
+                                            >
+                                                <Check className="w-4 h-4 mr-1" />
+                                                Enregistrer
+                                            </Button>
+                                        </div>
+                                    </div>
+                                ) : (
+                                    <div>
+                                        <h3 className="text-xl font-semibold text-slate-800 pr-10">
+                                            {deck.title}
+                                        </h3>
+
+                                        <p className="text-slate-600 mt-2 text-sm line-clamp-2">
+                                            {deck.description || "Aucune description."}
+                                        </p>
+                                    </div>
+                                )}
+                            </>
                             <div className="mt-6 flex gap-2 justify-between items-center">
                                 <div className="flex gap-2">
                                     <Link to={`/decks/${deck._id}`} className="px-3 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-md text-xs font-medium transition-colors">
