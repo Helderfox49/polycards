@@ -1,10 +1,20 @@
 import React from 'react';
+
+import { useUser } from '@clerk/clerk-react';
+import { Navigate } from 'react-router-dom';
+
 import { Button } from './ui/button';
 import { Card, CardContent } from './ui/card';
 import { Link } from 'react-router-dom';
 import { Layers, BookOpen, RotateCcw, CheckCircle } from 'lucide-react';
 
 export default function Home() {
+    const { isSignedIn } = useUser();
+
+    if (isSignedIn) {
+        return <Navigate to="/dashboard" replace />;
+    }
+    
     return (
         <div className="min-h-screen bg-slate-50">
 
@@ -153,11 +163,11 @@ export default function Home() {
                     <div className="mt-10 grid grid-cols-1 md:grid-cols-5 gap-4">
 
                         {[
-                            "Développeur 1",
-                            "Développeur 2",
-                            "Développeur 3",
-                            "Développeur 4",
-                            "Développeur 5",
+                            "BARKA EBEN-EZEER",
+                            "DIDDI KOULSOUMI",
+                            "MOUHAMADOU ALY IMRANA",
+                            "MBOTTO GUY ROBERT ULRICH",
+                            "OUMAROU HAMIDOU",
                         ].map((member, i) => (
                             <Card key={i} className="shadow-sm">
                                 <CardContent className="p-4">
