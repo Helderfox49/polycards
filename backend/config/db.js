@@ -6,7 +6,7 @@ const connectDB = async () => {
             dbName: "test"
         });
         console.log(`MongoDB Connecté : ${conn.connection.host}`);
-        // console.log(`MongoDB connecté sur la base de données : ${conn.connection.db.namespace}`);
+        console.log(`MongoDB connecté sur la base de données : ${conn.connection.db.namespace}`);
     } catch (error) {
         console.error(`Erreur de connexion : ${error.message}`);
         process.exit(1); // Arrête le serveur en cas d'échec
