@@ -2,13 +2,24 @@ const mongoose = require('mongoose');
 
 const connectDB = async () => {
     try {
-        // Fallback automatique vers localhost si process.env.MONGO_URI est indéfini ou vide
-        const uri = process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/polycards';
-        
+        // Vérifie que la variable d'environnement existe
+        if (!process.env.MONGO_URI) {
+            throw new Error('MONGO_URI manquante dans les variables d’environnement');
+        }
+
+        const isProd = process.env.NODE_ENV === 'production';
+        const uri = process.env.MONGO_URI;
+
         await mongoose.connect(uri);
-        console.log(`Base de données connectée sur : ${uri.includes('127.0.0.1') ? 'LOCAL' : 'PRODUCTION (Atlas)'}`);
+
+        console.log(
+            `Base de données connectée sur : ${
+                isProd ? 'PRODUCTION (MongoDB Atlas)' : 'LOCAL'
+            }`
+        );
+
     } catch (error) {
-        console.error(` Erreur de connexion MongoDB : ${error.message}`);
+        console.error(`Erreur de connexion MongoDB : ${error.message}`);
         process.exit(1);
     }
 };
