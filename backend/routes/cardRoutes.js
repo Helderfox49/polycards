@@ -1,4 +1,3 @@
-// backend/routes/cardRoutes.js
 const express = require('express');
 
 // IMPORTANT : mergeParams permet de récupérer le :deckId défini dans le routeur parent
