@@ -6,6 +6,7 @@ import {
     SignedOut,
 } from '@clerk/clerk-react';
 
+import Home from './components/Home';
 import Dashboard from './components/Dashboard';
 import DeckDetails from './components/DeckDetails';
 import StudySession from './components/StudySession';
@@ -43,6 +44,8 @@ function App() {
 
                     <main className="flex-grow">
                         <Routes>
+                            {/* HOME PAGE */}
+                            <Route path="/" element={<Home />} />
 
                             {/* AUTH */}
                             <Route

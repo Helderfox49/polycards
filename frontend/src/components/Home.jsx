@@ -1,94 +1,197 @@
-import React, { useState, useEffect } from 'react';
-import { API_BASE_URL } from '../config';
+import React from 'react';
+import { Button } from './ui/button';
+import { Card, CardContent } from './ui/card';
+import { Link } from 'react-router-dom';
+import { Layers, BookOpen, RotateCcw, CheckCircle } from 'lucide-react';
 
-function Home({ onSelectDeck }) {
-    const [decks, setDecks] = useState([]);
-    // Nouveaux états pour le formulaire de création
-    const [title, setTitle] = useState('');
-    const [description, setDescription] = useState('');
-
-    const fetchDecks = async () => {
-        try {
-            const response = await fetch(`${API_BASE_URL}/api/decks`);
-            const res = await response.json();
-            setDecks(res.data); 
-        } catch (error) {
-            console.error("Erreur lors de la récupération des paquets :", error);
-        }
-    };
-
-    useEffect(() => {
-        fetchDecks();
-    }, []);
-
-    // Gestion de la soumission du formulaire
-    const handleCreateDeck = async (e) => {
-        e.preventDefault(); // Empêche le rechargement de la page
-        if (!title) return alert("Le titre du paquet est obligatoire !");
-
-        try {
-            const response = await fetch(`${API_BASE_URL}/api/decks`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ title, description })
-            });
-
-            const res = await response.json();
-
-            if (res.success) {
-                setTitle("");
-                setDescription("");
-                fetchDecks();
-            } else {
-                alert(res.message || "Erreur création deck");
-            }
-        } catch (error) {
-            console.error("Erreur lors de la création du paquet :", error);
-        }
-    };
-
+export default function Home() {
     return (
-        <div className="container">
-            <h1> Mes Paquets de Révision (Decks)</h1>
-            
-            {/* BLOC FORMULAIRE D'AJOUT D'UN NOUVEAU PAQUET*/}
-            <form onSubmit={handleCreateDeck} style={{ background: '#fff', padding: '20px', borderRadius: '8px', marginBottom: '30px', boxShadow: '0 2px 4px rgba(0,0,0,0.05)' }}>
-                <h3>Créer un nouveau paquet de cartes</h3>
-                <div className="form-group">
-                    <label>Titre du paquet :</label>
-                    <input type="text" value={title} onChange={(e) => setTitle(e.target.value)} placeholder="Ex: Django" />
-                </div>
-                <div className="form-group">
-                    <label>Description :</label>
-                    <textarea 
-                        value={description} 
-                        onChange={(e) => setDescription(e.target.value)} 
-                        placeholder="Ex: Débuter la programmation web avec Python" 
-                        rows={4}
-                    />
-                </div>
-                <button type="submit">Créer le paquet</button>
-            </form>
+        <div className="min-h-screen bg-slate-50">
 
-            {/* GRILLE D'AFFICHAGE */}
-            {!Array.isArray(decks) || decks.length === 0 ? ( //Protection du render pour éviter le crash au cas ou on ne charge pas decks dans le tableau
-                <p>Aucun paquet disponible.</p>
-            ) : (
-                <div className="deck-grid">
-                    {decks.map(deck => (
-                        <div key={deck._id} className="deck-card">
-                            <h3>{deck.title}</h3>
-                            <p>{deck.description}</p>
-                            <div style={{ display: 'flex', gap: '10px', marginTop: '15px' }}>
-                                <button onClick={() => onSelectDeck(deck, 'manage')}>Gérer les cartes</button>
-                                <button style={{ backgroundColor: '#28a745' }} onClick={() => onSelectDeck(deck, 'study')}>Réviser</button>
-                            </div>
-                        </div>
-                    ))}
+            {/* HERO SECTION */}
+            <section className="max-w-6xl mx-auto px-6 py-16 text-center">
+                <h1 className="text-4xl md:text-5xl font-black text-slate-900">
+                    PolyCards
+                </h1>
+
+                <p className="mt-4 text-lg text-slate-600 max-w-2xl mx-auto">
+                    Une plateforme simple et efficace pour apprendre les concepts techniques
+                    grâce aux flashcards et à la répétition active.
+                </p>
+
+                <div className="mt-8 flex gap-4 justify-center">
+                    <Link to="/dashboard">
+                        <Button className="text-white bg-indigo-600 hover:bg-indigo-700">
+                            Commencer
+                        </Button>
+                    </Link>
+
+                    <Link to="/sign-in">
+                        <Button variant="outline">
+                            Se connecter
+                        </Button>
+                    </Link>
                 </div>
-            )}
+            </section>
+
+            {/* DESCRIPTION */}
+            <section className="max-w-6xl mx-auto px-6 py-12 grid md:grid-cols-2 gap-8 items-center">
+                <div>
+                    <h2 className="text-2xl font-bold text-slate-900">
+                        Apprenez plus vite, retenez mieux
+                    </h2>
+
+                    <p className="mt-4 text-slate-600 leading-relaxed">
+                        L’apprentissage de concepts techniques complexes (Docker, React, réseaux, mathématiques)
+                        repose sur la répétition et la pratique. PolyCards simplifie ce processus en vous permettant
+                        de créer des paquets de cartes et de réviser efficacement.
+                    </p>
+
+                    <ul className="mt-6 space-y-2 text-slate-700">
+                        <li className="flex items-center gap-2">
+                            <CheckCircle className="w-4 h-4 text-green-500" />
+                            Création de decks thématiques
+                        </li>
+                        <li className="flex items-center gap-2">
+                            <CheckCircle className="w-4 h-4 text-green-500" />
+                            Cartes recto / verso interactives
+                        </li>
+                        <li className="flex items-center gap-2">
+                            <CheckCircle className="w-4 h-4 text-green-500" />
+                            Mode révision fluide
+                        </li>
+                    </ul>
+                </div>
+
+                <div className="grid gap-4">
+                    <Card className="shadow-sm">
+                        <CardContent className="p-4 flex items-center gap-3">
+                            <Layers className="text-indigo-600" />
+                            <span>Création de Decks (Docker, React, Réseau...)</span>
+                        </CardContent>
+                    </Card>
+
+                    <Card className="shadow-sm">
+                        <CardContent className="p-4 flex items-center gap-3">
+                            <BookOpen className="text-green-600" />
+                            <span>Ajout de cartes (Question / Réponse)</span>
+                        </CardContent>
+                    </Card>
+
+                    <Card className="shadow-sm">
+                        <CardContent className="p-4 flex items-center gap-3">
+                            <RotateCcw className="text-blue-600" />
+                            <span>Mode révision interactif</span>
+                        </CardContent>
+                    </Card>
+                </div>
+            </section>
+
+            {/* USER STORIES */}
+            <section className="bg-white border-t py-16">
+                <div className="max-w-6xl mx-auto px-6">
+
+                    <h2 className="text-3xl font-bold text-center text-slate-900">
+                        Fonctionnalités principales
+                    </h2>
+
+                    <div className="mt-10 grid md:grid-cols-2 gap-8">
+
+                        <Card className="shadow-sm">
+                            <CardContent className="p-6">
+                                <h3 className="font-semibold text-lg">📦 Gestion des Decks</h3>
+                                <p className="text-slate-600 mt-2 text-sm">
+                                    Créez des paquets thématiques (ex : Docker, React, Maths).
+                                    Consultez tous vos decks depuis la page principale.
+                                </p>
+                            </CardContent>
+                        </Card>
+
+                        <Card className="shadow-sm">
+                            <CardContent className="p-6">
+                                <h3 className="font-semibold text-lg">🃏 Gestion des Cartes</h3>
+                                <p className="text-slate-600 mt-2 text-sm">
+                                    Ajoutez des cartes avec un recto (question) et un verso (réponse).
+                                </p>
+                            </CardContent>
+                        </Card>
+
+                        <Card className="shadow-sm">
+                            <CardContent className="p-6">
+                                <h3 className="font-semibold text-lg">🎯 Mode Révision</h3>
+                                <p className="text-slate-600 mt-2 text-sm">
+                                    Retournez les cartes, révisez et progressez efficacement.
+                                </p>
+                            </CardContent>
+                        </Card>
+
+                        <Card className="shadow-sm">
+                            <CardContent className="p-6">
+                                <h3 className="font-semibold text-lg">🏁 Fin de session</h3>
+                                <p className="text-slate-600 mt-2 text-sm">
+                                    Un écran de fin vous félicite après chaque session de révision.
+                                </p>
+                            </CardContent>
+                        </Card>
+
+                    </div>
+                </div>
+            </section>
+
+            {/* TEAM SECTION */}
+            <section className="py-16 bg-slate-50 border-t">
+                <div className="max-w-6xl mx-auto px-6 text-center">
+
+                    <h2 className="text-3xl font-bold text-slate-900">
+                        Équipe du projet
+                    </h2>
+
+                    <p className="text-slate-600 mt-2">
+                        Projet réalisé par une équipe de 5 développeurs
+                    </p>
+
+                    <div className="mt-10 grid grid-cols-1 md:grid-cols-5 gap-4">
+
+                        {[
+                            "Développeur 1",
+                            "Développeur 2",
+                            "Développeur 3",
+                            "Développeur 4",
+                            "Développeur 5",
+                        ].map((member, i) => (
+                            <Card key={i} className="shadow-sm">
+                                <CardContent className="p-4">
+                                    <div className="w-10 h-10 mx-auto bg-indigo-100 text-indigo-600 rounded-full flex items-center justify-center font-bold">
+                                        {i + 1}
+                                    </div>
+                                    <p className="mt-3 text-sm font-medium text-slate-700">
+                                        {member}
+                                    </p>
+                                </CardContent>
+                            </Card>
+                        ))}
+
+                    </div>
+                </div>
+            </section>
+
+            {/* CTA FINAL */}
+            <section className="py-16 text-center bg-indigo-600 text-white">
+                <h2 className="text-3xl font-bold">
+                    Prêt à commencer à apprendre ?
+                </h2>
+
+                <p className="mt-2 text-indigo-100">
+                    Crée tes premiers decks et commence à réviser efficacement dès maintenant.
+                </p>
+
+                <Link to="/dashboard">
+                    <Button className="mt-6 bg-white text-indigo-600 hover:bg-slate-100">
+                        Accéder à PolyCards
+                    </Button>
+                </Link>
+            </section>
+
         </div>
     );
 }
-
-export default Home;
