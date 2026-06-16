@@ -1,74 +1,83 @@
 const Card = require('../models/Card');
 const Deck = require('../models/Deck');
 
-// @desc Récupérer toutes les cartes d'un paquet spécifique
-// @route GET /api/decks/:id/cards
-exports.getCardsByDeck = async (req, res) => {
+// 1. GET /api/decks/:deckId/cards
+const getCardsByDeck = async (req, res) => {
     try {
-        const deckId = req.params.id;
+        const { deckId } = req.params; // Extrait de l'URL imbriquée
+        const userId = req.auth.userId;
 
-        // Vérifier d'abord si le paquet existe
-        const deckExists = await Deck.findById(deckId);
-        if (!deckExists) {
-            return res.status(404).json({ message: "Paquet non trouvé" });
+        const destinationDeck = await Deck.findOne({ _id: deckId, userId });
+        if (!destinationDeck) {
+            return res.status(403).json({ success: false, message: "Accès refusé. Ce paquet ne vous appartient pas." });
         }
 
-        // Trouver toutes les cartes qui possèdent ce deckId
-        const cards = await Card.find({ deckId: deckId });
-        
-        res.status(200).json({
-            success: true,
-            data: cards
-        });
-
+        const cards = await Card.find({ deckId });
+        return res.status(200).json({ success: true, data: cards, message: "Cartes récupérées avec succès." });
     } catch (error) {
-        res.status(500).json({ 
-            success: false,
-            message: "Erreur lors de la récupération des cartes",
-            error: error.message 
-        });
+        return res.status(500).json({ success: false, message: "Erreur serveur.", error: error.message });
     }
 };
 
-// @desc Ajouter une carte à un paquet cible
-// @route POST /api/decks/:id/cards
-exports.addCardToDeck = async (req, res) => {
+// 2. POST /api/decks/:deckId/cards
+const createCard = async (req, res) => {
     try {
-        const deckId = req.params.id;
+        const { deckId } = req.params; // Extrait directement de l'URL
         const { front, back } = req.body;
-    
-        // Vérifier si le paquet cible existe
-        const deckExists = await Deck.findById(deckId);
-        
-        if (!deckExists) {
-            return res.status(404).json({ 
-                message: "Paquet cible non trouvé" 
-            });
+        const userId = req.auth.userId;
+
+        const destinationDeck = await Deck.findOne({ _id: deckId, userId });
+        if (!destinationDeck) {
+            return res.status(403).json({ success: false, message: "Action non autorisée." });
         }
 
-        // Validation des champs requis
-        if (!front || !back) {
-            return res.status(400).json({ 
-                message: "Les champs Recto (front) et Verso (back) sont obligatoires" 
-            });
-        }
-
-        // Création de la carte liée au paquet
-        const newCard = new Card({
-            deckId: deckId,
-            front,
-            back
-        });
-
-        const savedCard = await newCard.save();
-        res.status(201).json({
-            success: true,
-            data: savedCard
-        });
+        const newCard = await Card.create({ deckId, front, back });
+        return res.status(201).json({ success: true, data: newCard, message: "Carte ajoutée avec succès." });
     } catch (error) {
-        res.status(500).json({ 
-            message: "Erreur lors de l'ajout de la carte", 
-            error: error.message 
-        });
+        return res.status(500).json({ success: false, message: "Erreur serveur.", error: error.message });
     }
 };
+
+// 3. PUT /api/decks/:deckId/cards/:cardId
+const updateCard = async (req, res) => {
+    try {
+        const { deckId, cardId } = req.params; // Double vérification des IDs de la route
+        const { front, back } = req.body;
+        const userId = req.auth.userId;
+
+        const ownershipCheck = await Deck.findOne({ _id: deckId, userId });
+        if (!ownershipCheck) {
+            return res.status(403).json({ success: false, message: "Action non autorisée." });
+        }
+
+        const updatedCard = await Card.findOneAndUpdate(
+            { _id: cardId, deckId },
+            { front, back },
+            { new: true }
+        );
+
+        return res.status(200).json({ success: true, data: updatedCard, message: "Carte modifiée." });
+    } catch (error) {
+        return res.status(500).json({ success: false, error: error.message });
+    }
+};
+
+// 4. DELETE /api/decks/:deckId/cards/:cardId
+const deleteCard = async (req, res) => {
+    try {
+        const { deckId, cardId } = req.params;
+        const userId = req.auth.userId;
+
+        const ownershipCheck = await Deck.findOne({ _id: deckId, userId });
+        if (!ownershipCheck) {
+            return res.status(403).json({ success: false, message: "Action non autorisée." });
+        }
+
+        await Card.findOneAndDelete({ _id: cardId, deckId });
+        return res.status(200).json({ success: true, data: null, message: "Carte supprimée." });
+    } catch (error) {
+        return res.status(500).json({ success: false, error: error.message });
+    }
+};
+
+module.exports = { getCardsByDeck, createCard, updateCard, deleteCard };

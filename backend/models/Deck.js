@@ -1,6 +1,10 @@
 const mongoose = require('mongoose');
 
 const DeckSchema = new mongoose.Schema({
+    userId: { 
+        type: String, 
+        required: [true, 'L\'identifiant utilisateur Clerk est requis'] 
+    },
     title: {
         type: String,
         required: [true, "Le titre du paquet est obligatoire"]

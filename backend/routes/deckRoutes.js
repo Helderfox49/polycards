@@ -1,13 +1,25 @@
 const express = require('express');
 const router = express.Router();
+const { getMyDecks, createDeck, updateDeck, deleteDeck, getDeckById } = require('../controllers/deckController');
+const requireAuth = require('../middleware/auth');
 
-// Importation des contrôleurs
-const { getDecks, createDeck } = require('../controllers/deckController');
+// Importation du routeur des cartes
+const cardRouter = require('./cardRoutes');
 
-// GET /api/decks -> Récupère tous les paquets
-router.get('/', getDecks)
+// RÈGLE DE ROUTAGE IMBRIQUÉ : 
+// Tout ce qui commence par /api/decks/:deckId/cards sera redirigé vers cardRouter
+router.use('/:deckId/cards', cardRouter);
 
-// POST /api/decks -> Crée un nouveau paquet
-router.post('/', createDeck); 
+// Routes classiques pour les paquets
+router.route('/')
+    .get(requireAuth, getMyDecks)
+    .post(requireAuth, createDeck);
+
+router.route('/:id')
+    .put(requireAuth, updateDeck)
+    .delete(requireAuth, deleteDeck);
+
+router.route('/:deckId')
+    .get(requireAuth, getDeckById);
 
 module.exports = router;

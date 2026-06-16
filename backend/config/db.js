@@ -2,14 +2,14 @@ const mongoose = require('mongoose');
 
 const connectDB = async () => {
     try {
-        const conn = await mongoose.connect(process.env.MONGO_URI, {
-            dbName: "polycards"
-        });
-        console.log(`MongoDB Connecté : ${conn.connection.host}`);
-        // console.log(`MongoDB connecté sur la base de données : ${conn.connection.db.namespace}`);
+        // Fallback automatique vers localhost si process.env.MONGO_URI est indéfini ou vide
+        const uri = process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/polycards';
+        
+        await mongoose.connect(uri);
+        console.log(`Base de données connectée sur : ${uri.includes('127.0.0.1') ? 'LOCAL' : 'PRODUCTION (Atlas)'}`);
     } catch (error) {
-        console.error(`Erreur de connexion : ${error.message}`);
-        process.exit(1); // Arrête le serveur en cas d'échec
+        console.error(` Erreur de connexion MongoDB : ${error.message}`);
+        process.exit(1);
     }
 };
 
