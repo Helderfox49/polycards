@@ -30,9 +30,9 @@ export default function Home() {
                 </p>
 
                 <div className="mt-8 flex gap-4 justify-center">
-                    <Link to="/dashboard">
+                    <Link to="/sign-up">
                         <Button className="text-white bg-indigo-600 hover:bg-indigo-700">
-                            Commencer
+                            S'inscrire
                         </Button>
                     </Link>
 
